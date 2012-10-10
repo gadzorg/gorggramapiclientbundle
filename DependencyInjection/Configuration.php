@@ -18,7 +18,18 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('gorg_api');
+        $rootNode = $treeBuilder->root('gorg_gram_api_client');
+        $rootNode
+          ->children()
+            ->scalarNode('user')
+              ->end()
+            ->scalarNode('password')
+              ->end()
+            ->scalarNode('path')
+              ->end()
+            ->scalarNode('server')
+              ->end()
+          ->end();
 
         // Here you should define the parameters that are allowed to
         // configure your bundle. See the documentation linked above for
