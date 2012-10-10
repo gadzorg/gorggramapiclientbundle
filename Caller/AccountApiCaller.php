@@ -32,4 +32,17 @@ class AccountApiCaller extends AbstractCaller
         }
         return null;
     }
+
+    public function updatePassword($username, $password)
+    {
+        $encodedPassword = sha1($password);
+        $data = array(
+            'password' => $encodedPassword,
+            'hruid'    => $username,
+        );
+        $content = $this->call("PUT", '/accounts/' . $username . '/accounts.json', $data);
+        $this->logger->info(sprintf("Update password on Gram, response : %s", $content));
+
+        return;
+    }
 }

@@ -52,7 +52,7 @@ abstract class AbstractCaller
        $request->addHeader('Accept: application/json');
        $request->addHeader('Content-type: application/json');
 
-       if($method == "POST") {
+       if(in_array($method, array("POST", "PUT"))) {
            $request->setContent(json_encode($data));
        }
 
