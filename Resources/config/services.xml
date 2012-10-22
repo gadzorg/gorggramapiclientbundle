@@ -6,6 +6,7 @@
 
    <parameters>
         <parameter key="gorg_api.account_api_caller.class">Gorg\Bundle\GramApiClientBundle\Caller\AccountApiCaller</parameter>
+        <parameter key="gorg_api.group_api_caller.class">Gorg\Bundle\GramApiClientBundle\Caller\GroupApiCaller</parameter>
         <parameter key="gorg_user.api.user">%api_user%</parameter>
         <parameter key="gorg_user.api.password">%api_password%</parameter>
         <parameter key="gorg_user.api.path">%api_path%</parameter>
@@ -14,6 +15,14 @@
 
    <services>
         <service id="gram_account_api_caller" class="%gorg_api.account_api_caller.class%">
+            <argument type="service" id="logger"/>
+            <argument type="service" id="buzz"/>
+            <argument>%gorg_user.api.user%</argument>
+            <argument>%gorg_user.api.password%</argument>
+            <argument>%gorg_user.api.path%</argument>
+            <argument>%gorg_user.api.server%</argument>
+        </service>
+        <service id="gram_group_api_caller" class="%gorg_api.group_api_caller.class%">
             <argument type="service" id="logger"/>
             <argument type="service" id="buzz"/>
             <argument>%gorg_user.api.user%</argument>

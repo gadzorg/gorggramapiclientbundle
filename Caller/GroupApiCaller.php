@@ -21,39 +21,23 @@
 
 namespace Gorg\Bundle\GramApiClientBundle\Caller;
 
-class AccountApiCaller extends AbstractCaller
+class GroupApiCaller extends AbstractCaller
 {
-    public function createAccount(array $data)
+    public function getUserGroup($username)
     {
-        $content = $this->call("POST", "/accounts/accounts.json", $data);
-        $this->logger->info(sprintf("Create Account on Gram, response : %s", $content));
-        if($content) {
-            return json_decode($content);
-        }
-        return null;
+        $content = $this->call("GET", '/accounts/' . $username . '/groups.json');
+
+        $this->logger->info(sprintf("Get Groups on Gram, response : %s", $content));
+
+        return json_decode($content);
     }
 
-    public function addUserToGroup($username, $group)
-    {
-        $content = $this->call("POST", '/accounts/' . $username . '/groups/' . $group . '/direct.json',
-);
-        $this->logger->info(sprintf("Add User To Group, response : %s", $content));
-        if($content) {
-            return json_decode($content);
-        }
-        return null;
-    }
+    public function getGroup($group)
+    {  
+        $content = $this->call("GET", '/groups/' . $group .'/groups.json');
 
-    public function updatePassword($username, $password)
-    {
-        $encodedPassword = sha1($password);
-        $data = array(
-            'password' => $encodedPassword,
-            'hruid'    => $username,
-        );
-        $content = $this->call("PUT", '/accounts/' . $username . '/accounts.json', $data);
-        $this->logger->info(sprintf("Update password on Gram, response : %s", $content));
+        $this->logger->info(sprintf("Get %s group on Gram, response : %s", $group, $content));
 
-        return;
+        return json_decode($content);
     }
 }
