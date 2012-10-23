@@ -35,7 +35,7 @@ class AccountApiCaller extends AbstractCaller
 
     public function addUserToGroup($username, $group)
     {
-        $content = $this->call("POST", '/accounts/' . $username . '/groups/' . $group . '/direct.json',
+        $content = $this->call("POST", '/accounts/' . $username . '/groups/' . $group . '/direct.json'
 );
         $this->logger->info(sprintf("Add User To Group, response : %s", $content));
         if($content) {
