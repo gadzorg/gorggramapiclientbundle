@@ -21,14 +21,24 @@
 
 namespace Gorg\Bundle\GramApiClientBundle\Caller;
 
+use Gorg\Bundle\GramApiClientBundle\Entity\StdApiEntity;
+
+
 class AccountApiCaller extends AbstractCaller
 {
-    public function createAccount(array $data)
+    private function isSha1($str) {
+        return (bool) preg_match('/^[0-9a-f]{40}$/i', $str);
+    }
+
+    public function createAccount($data)
     {
-        $content = $this->call("POST", "/accounts/accounts.json", $data);
+        if(!is_array($data)) {
+            $data = $data->toArray();
+        }
+        $content = $this->call("POST", "/accounts.json", $data);
         $this->logger->info(sprintf("Create Account on Gram, response : %s", $content));
         if($content) {
-            return json_decode($content);
+            return StdApiEntity::buildFromStdClass(json_decode($content));
         }
         return null;
     }
@@ -39,7 +49,7 @@ class AccountApiCaller extends AbstractCaller
 );
         $this->logger->info(sprintf("Add User To Group, response : %s", $content));
         if($content) {
-            return json_decode($content);
+            return StdApiEntity::buildFromStdClass(json_decode($content));
         }
         return null;
     }
@@ -53,7 +63,55 @@ class AccountApiCaller extends AbstractCaller
         );
         $content = $this->call("PUT", '/accounts/' . $username . '/accounts.json', $data);
         $this->logger->info(sprintf("Update password on Gram, response : %s", $content));
+        if($content) {
+            $response = json_decode($content);
+            if(isset($response->status) && $response->status == "error") {
+                return null;
+            } else {
+                return $response;
+            }
+        }
+        return null;
 
-        return;
+    }
+
+    public function update($username, $account)
+    {
+        $data = $account->toArray();
+        unset($data['hruid']);
+
+        if(!self::isSha1($data['password'])) {
+            unset($data['password']);
+        }
+
+        $content = $this->call("PUT", '/accounts/' . $username . '/accounts.json', $data);
+        $this->logger->info(sprintf("Update password on Gram, response : %s", $content));
+        if($content) {
+            $response = json_decode($content);
+            if(isset($response->status) && $response->status == "error") {
+                return null;
+            } else {
+                return $response;
+            }
+        }
+        return null;
+    }
+
+    public function search($query = "__all__")
+    {
+        $content = $this->call("GET", '/accounts/' . $query . '/finds/10/pages/1.json');
+        if($content) {
+            return json_decode($content);
+        }
+        return null;
+    }
+
+    public function get($username)
+    {
+        $content = $this->call("GET", '/accounts/' . $username . '/accounts.json');
+        if($content) {
+            return StdApiEntity::buildFromStdClass(json_decode($content));
+        }
+        return null;
     }
 }
