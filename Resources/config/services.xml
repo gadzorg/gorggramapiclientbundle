@@ -14,9 +14,14 @@
    </parameters>
 
    <services>
+        <service id="data_collector.gram_api" class="Gorg\Bundle\GramApiClientBundle\Collector\ApiDataCollector">
+            <tag name="data_collector" template="GorgGramApiClientBundle:Collector:api_view.html.twig" id="api_gram" />
+        </service>
+
         <service id="gram_account_api_caller" class="%gorg_api.account_api_caller.class%">
             <argument type="service" id="logger"/>
             <argument type="service" id="buzz"/>
+            <argument type="service" id="data_collector.gram_api"/>
             <argument>%gorg_user.api.user%</argument>
             <argument>%gorg_user.api.password%</argument>
             <argument>%gorg_user.api.path%</argument>
@@ -25,10 +30,11 @@
         <service id="gram_group_api_caller" class="%gorg_api.group_api_caller.class%">
             <argument type="service" id="logger"/>
             <argument type="service" id="buzz"/>
+            <argument type="service" id="data_collector.gram_api"/>
             <argument>%gorg_user.api.user%</argument>
             <argument>%gorg_user.api.password%</argument>
             <argument>%gorg_user.api.path%</argument>
             <argument>%gorg_user.api.server%</argument>
         </service>
-   </services>
+    </services>
 </container>

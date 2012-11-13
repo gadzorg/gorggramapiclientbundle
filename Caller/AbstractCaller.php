@@ -21,6 +21,8 @@
 
 namespace Gorg\Bundle\GramApiClientBundle\Caller;
 
+use Gorg\Bundle\GramApiClientBundle\Collector\ApiDataCollector;
+
 abstract class AbstractCaller
 {
     protected $apiUser;
@@ -29,11 +31,13 @@ abstract class AbstractCaller
     protected $apiServer;
     protected $logger;
     protected $buzz;
+    protected $collector;
 
-    public function __construct($logger, $buzz, $user, $password, $path, $server)
+    public function __construct($logger, $buzz, ApiDataCollector $collector, $user, $password, $path, $server)
     {
         $this->buzz        = $buzz;
         $this->logger      = $logger;
+        $this->collector   = $collector;
         $this->apiUser     = $user;
         $this->apiPassword = $password;
         $this->apiPath     = $path;
@@ -59,6 +63,10 @@ abstract class AbstractCaller
        $this->logger->info(sprintf("Send %s request on gram : %s%s with data: %s",  $method, $this->apiServer, $this->apiPath . $url, json_encode($data)));
        $this->buzz->send($request, $response);
 
+       $this->collector->logQuery(array(
+           'url' => $url,
+           'method' => $method,
+       ));
        return $response->getContent();
     }
 }
