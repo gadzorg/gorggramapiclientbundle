@@ -97,6 +97,15 @@ class AccountApiCaller extends AbstractCaller
         return null;
     }
 
+    public function addRole($username, $roleName, $rolePattern)
+    {
+        $data = array(
+            'name'   => $roleName,
+            'filter' => $rolePattern,
+        );
+        $content = $this->call("POST", '/accounts/' . $username . '/role.json', $data);
+    }
+
     public function search($query = "__all__")
     {
         $content = $this->call("GET", '/accounts/' . $query . '/finds/10/pages/1.json');
