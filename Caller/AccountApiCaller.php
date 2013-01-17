@@ -45,7 +45,7 @@ class AccountApiCaller extends AbstractCaller
 
     public function addUserToGroup($username, $group)
     {
-        $content = $this->call("POST", '/accounts/' . $username . '/groups/' . $group . '/direct.json'
+        $content = $this->call("POST", '/accounts/' . $username . '/groups/' . $group . '.json'
 );
         $this->logger->info(sprintf("Add User To Group, response : %s", $content));
         if($content) {
@@ -132,6 +132,40 @@ class AccountApiCaller extends AbstractCaller
     public function findByEmail($email)
     {
         $content = $this->call("GET", '/emails/' . $email . '/accounts.json');
+        if($content) {
+            return json_decode($content);
+        }
+        return null;
+    }
+
+    public function addMailAccount($username)
+    {
+        $content = $this->call("POST", '/accounts/' . $username . '/email.json');
+
+        if($content) {
+            return json_decode($content);
+        }
+        return null;
+    }
+
+    public function addGappsAccount($username)
+    {
+        $content = $this->call("POST", '/accounts/' . $username . '/gapps.json');
+
+        if($content) {
+            return json_decode($content);
+        }
+        return null;
+    }
+
+    public function addLoginValidationCheck($username, $val)
+    {
+        $data = array(
+            'val'   => $val,
+        );
+
+        $content = $this->call("POST", '/accounts/' . $username . '/logincheck.json', $data);
+
         if($content) {
             return json_decode($content);
         }
