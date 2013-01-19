@@ -38,4 +38,13 @@ class ProfileApiCaller extends AbstractCaller
         }
         return null;
     }
+
+    public function get($username)
+    {
+        $content = $this->call("GET", "/profiles/" . $username . "/profile.json");
+        if($content) {
+            return StdApiEntity::buildFromStdClass(json_decode($content));
+        }
+        return null;
+    }
 }

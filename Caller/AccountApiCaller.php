@@ -49,7 +49,7 @@ class AccountApiCaller extends AbstractCaller
 );
         $this->logger->info(sprintf("Add User To Group, response : %s", $content));
         if($content) {
-            return StdApiEntity::buildFromStdClass(json_decode($content));
+            return json_decode($content);
         }
         return null;
     }
